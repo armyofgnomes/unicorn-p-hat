@@ -1,8 +1,14 @@
 import time
-#import colorsys
+import colorsys
 import yaml
+import unicornhat as uh
 from TwitterAPI import TwitterAPI
 
+# Configure pHat
+uh.set_layout(uh.PHAT)
+uh.brightness(0.5)
+
+# Open Twitter configuration
 with open("config.yml", 'r') as ymlfile:
     cfg = yaml.load(ymlfile)
 
@@ -17,6 +23,11 @@ r = api.request('statuses/filter', {'track': terms})
 for item in r:
   if 'text' in item:
     count += 1
+    for x in range(8):
+        for y in range(4):
+            uh.set_pixel(x, y, 0, 255, 255)
+        time.sleep(1)
+        uh.show()
   elif 'limit' in item:
     skip = item['limit'].get('track')
     print('*** SKIPPED %d TWEETS' % skip)
