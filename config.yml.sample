@@ -1,0 +1,6 @@
+twitter:
+  api_key: 'API_KEY_HERE'
+  api_secret: 'API_SECRET_HERE'
+  access_token: 'ACCESS_TOKEN_HERE'
+  access_token_secret: 'ACCESS_TOKEN_SECRET_HERE'
+  tracking_terms: 'whatever,terms'
