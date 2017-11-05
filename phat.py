@@ -19,14 +19,23 @@ terms = twitter_cfg['tracking_terms']
 
 count = 0
 skip = 0
+latest_tweet_time = time.time()
 r = api.request('statuses/filter', {'track': terms})
+
 for item in r:
   if 'text' in item:
+    time_difference = time.time() - latest_tweet_time
+    latest_tweet_time = time.time()
     count += 1
+    normalized_time = 1 - time_difference
+    if normalized_time < 0:
+        normalized_time = 0
+    hue = int((normalized_time) * 100000) % 360
+    h = hue / 360.0
+    r, g, b = [int(c * 255) for c in colorsys.hsv_to_rgb(h, 1.0, 1.0)]
     for x in range(8):
         for y in range(4):
-            uh.set_pixel(x, y, 0, 255, 255)
-        time.sleep(1)
+            uh.set_pixel(x, y, r, g, b)
         uh.show()
   elif 'limit' in item:
     skip = item['limit'].get('track')
