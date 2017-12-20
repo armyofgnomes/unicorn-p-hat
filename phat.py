@@ -19,18 +19,21 @@ terms = twitter_cfg['tracking_terms']
 
 count = 0
 skip = 0
-latest_tweet_time = time.time()
+hue = 0.0
+latest_tweet_interval = time.time()
+tweet_interval_count = 0
 r = api.request('statuses/filter', {'track': terms})
 
 for item in r:
   if 'text' in item:
-    time_difference = time.time() - latest_tweet_time
-    latest_tweet_time = time.time()
     count += 1
-    normalized_time = 1 - time_difference
-    if normalized_time < 0:
-        normalized_time = 0
-    hue = int((normalized_time) * 100000) % 360
+    tweet_interval_count += 1
+    if time.time() >= latest_tweet_interval + 30.0:
+        hue = tweet_interval_count
+        latest_tweet_interval = time.time()
+        tweet_interval_count = 0
+    if hue > 270:
+        hue = 270.0
     h = hue / 360.0
     r, g, b = [int(c * 255) for c in colorsys.hsv_to_rgb(h, 1.0, 1.0)]
     for x in range(8):
@@ -44,3 +47,4 @@ for item in r:
     print('[disconnect] %s' % item['disconnect'].get('reason'))
     break
   print(count+skip);
+
